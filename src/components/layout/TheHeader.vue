@@ -9,12 +9,36 @@
       <li class="header_list_item">
         <router-link class="header_link" to="/coaches">All coaches</router-link>
       </li>
-      <li class="header_list_item">
+      <!-- кнопка requests доступна только после авторизации. иначе- кнопка login -->
+      <li class="header_list_item" v-if="isLoggedIn">
         <router-link class="header_link" to="/requests">Requests</router-link>
+      </li>
+      <li v-else>
+        <router-link class="header_link" to="/auth">Login</router-link>
+      </li>
+      <li v-if="isLoggedIn">
+        <base-button @click="logout">Logout</base-button>
       </li>
     </ul>
   </header>
 </template>
+
+<script>
+export default {
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+      //после logout добавляем редирект на другую страницу
+      this.$router.replace('/coaches');
+    }
+  }
+}
+</script>
 
 <style scoped lang="scss">
 .header {

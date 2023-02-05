@@ -42,6 +42,7 @@ export default {
   border-radius: 30px;
   margin-right: 0.5rem;
   display: inline-block;
+  transition: all 0.3s ease-out;
 
   &:hover,
   &:active {

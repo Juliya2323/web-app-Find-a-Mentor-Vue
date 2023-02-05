@@ -24,9 +24,12 @@ export default {
     },
     //загружаем данные с сервера:
     async fetchRequests(context) {
+        // регистрация в качестве ментора и список запросов доступны только авторизированным пользователям. добавляем к ссылке ?auth=` + token
+       const token = context.rootGetters.token;
        const coachId = context.rootGetters.userId;
-       const response = await fetch(`https://learning-app-aefd1-default-rtdb.firebaseio.com/requests/${coachId}.json`);
+       const response = await fetch(`https://learning-app-aefd1-default-rtdb.firebaseio.com/requests/${coachId}.json?auth=` + token);
        const responseData = await response.json();
+       
 
        if (!response.ok) {
             const error = new Error(responseData.message || 'Failed to fetch a request.');

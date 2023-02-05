@@ -1,34 +1,42 @@
 <template>
-  <base-card>
-    <form class="auth_form" @submit.prevent="submitForm">
-      <div class="auth_form_control">
-        <label class="auth_form_label" for="email">Email</label>
-        <input
-          class="auth_form_input"
-          type="email"
-          id="email"
-          v-model.trim="email"
-        />
-      </div>
-      <div class="auth_form_control">
-        <label class="auth_form_label" for="password">Password</label>
-        <input
-          class="auth_form_input"
-          type="password"
-          id="password"
-          v-model.trim="password"
-        />
-      </div>
-      <p v-if="!formIsValid">
-        Please, enter a valid email and password (must be at least 6 characters
-        long).
-      </p>
-      <base-button>{{ submitButtonCaption }}</base-button>
-      <base-button type="button" mode="flat" @click="switchAuthMode">{{
-        switchModeButtonCaption
-      }}</base-button>
-    </form>
-  </base-card>
+  <div>
+    <base-dialog :show="!!error" title="An error occured" @close="handleError">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <base-dialog fixed :show="isLoading" title="Authenticating...">
+      <base-spinner></base-spinner>
+    </base-dialog>
+    <base-card>
+      <form class="auth_form" @submit.prevent="submitForm">
+        <div class="auth_form_control">
+          <label class="auth_form_label" for="email">Email</label>
+          <input
+            class="auth_form_input"
+            type="email"
+            id="email"
+            v-model.trim="email"
+          />
+        </div>
+        <div class="auth_form_control">
+          <label class="auth_form_label" for="password">Password</label>
+          <input
+            class="auth_form_input"
+            type="password"
+            id="password"
+            v-model.trim="password"
+          />
+        </div>
+        <p v-if="!formIsValid">
+          Please, enter a valid email and password (must be at least 6
+          characters long).
+        </p>
+        <base-button>{{ submitButtonCaption }}</base-button>
+        <base-button type="button" mode="flat" @click="switchAuthMode">{{
+          switchModeButtonCaption
+        }}</base-button>
+      </form>
+    </base-card>
+  </div>
 </template>
 
 <script>
@@ -39,6 +47,8 @@ export default {
       password: '',
       formIsValid: true,
       mode: 'login',
+      isLoading: false,
+      error: null,
     };
   },
   computed: {
@@ -58,7 +68,7 @@ export default {
     },
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       this.formIsValid = true;
       if (
         this.email === '' ||
@@ -68,6 +78,26 @@ export default {
         this.formIsValid = false;
         return;
       }
+      this.isLoading = true;
+      const actionPayload = {
+        email: this.email,
+        password: this.password
+      }
+      try {
+        if (this.mode === 'login') {
+          await this.$store.dispatch('login', actionPayload);
+        } else {
+          await this.$store.dispatch('signup', actionPayload);
+        }
+        //после успешной аутентификации добавляем редирект на другую страницу
+        //?redirect=register из ссылки в UserAuth. перейдет на /register
+        //тогда после нажатия на кнопку Login to Register as a Coach сразу после регистрации перейдем на форму регистрации в качестве ментора, а при logout - на coaches
+        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        this.$router.replace(redirectUrl);
+      } catch (error) {
+        this.error = error.message || 'Failed to authenticate.';
+      }
+      this.isLoading = false;
     },
     switchAuthMode() {
       if (this.mode === 'login') {
@@ -75,6 +105,9 @@ export default {
       } else {
         this.mode = 'login';
       }
+    },
+    handleError() {
+      this.error = null;
     },
   },
 };

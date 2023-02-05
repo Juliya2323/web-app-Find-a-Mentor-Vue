@@ -9,9 +9,11 @@ export default {
       description: data.descr,
       hourlyRate: data.rate,
     };
+    // регистрация в качестве ментора и список запросов доступны только авторизированным пользователям. добавляем к ссылке ?auth=` + token
+    const token = context.rootGetters.token;
     //fetch возвращает промис. и вместо того чтобы использовать .then() мы используем async await
     const response = await fetch(
-      `https://learning-app-aefd1-default-rtdb.firebaseio.com/coaches/${userId}.json`,
+      `https://learning-app-aefd1-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=` + token,
       {
         // put отличается от post тем что данные будут записаны или перезаписаны!, если они существовали
         //а у нас можно зарегистрироваться ментором только 1 раз- то есть 1 ментор на пользователя

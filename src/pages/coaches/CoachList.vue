@@ -10,7 +10,10 @@
           <base-button mode="outline" @click="loadCoaches(true)"
             >Refresh</base-button
           >
-          <base-button v-if="!isCoach && !isLoading" link to="/register"
+          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn">Login to Register as a Coach</base-button>
+          <!-- эта кнопка не д.б. видна, если пользователь не зарег-н. тогда показывается кнопка Login -->
+          <!-- но т.к. если ввести прямую ссылку CoachRegistration все равно доступна, поэтому добавить guards в beforeEach() в router.js-->
+          <base-button v-if="!isCoach && !isLoading && isLoggedIn" link to="/register"
             >Register as a Coach</base-button
           >
         </div>
@@ -73,6 +76,9 @@ export default {
       return this.$store.getters['coaches/isCoach'];
       // если пользователь уже зарегистрирован как coach то убираем кнопку для регистрации через v-if
     },
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    }
   },
   created() {
     this.loadCoaches();
