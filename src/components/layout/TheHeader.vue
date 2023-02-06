@@ -55,6 +55,7 @@ export default {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     border: 1px solid transparent;
+    border-radius: 15px;
     transition: all 0.3s ease-out;
 
     &:active,

@@ -1,12 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import CoachDetail from './pages/coaches/CoachDetail.vue';
+//import CoachDetail from './pages/coaches/CoachDetail.vue';
 import CoachList from './pages/coaches/CoachList.vue';
-import CoachRegistration from './pages/coaches/CoachRegistration.vue';
-import ContactCoach from './pages/requests/ContactCoach.vue';
-import RequestsRecieved from './pages/requests/RequestsRecieved.vue';
-import UserAuth from './pages/auth/UserAuth.vue';
+//import CoachRegistration from './pages/coaches/CoachRegistration.vue';
+//import ContactCoach from './pages/requests/ContactCoach.vue';
+//import RequestsRecieved from './pages/requests/RequestsRecieved.vue';
+//import UserAuth from './pages/auth/UserAuth.vue';
 import NotFound from './pages/NotFound.vue';
 import store from './store/index.js';
+
+//добавим lazy-loading на некоторые компоненты
+const CoachDetail = () => import('./pages/coaches/CoachDetail.vue');
+const CoachRegistration = () => import('./pages/coaches/CoachRegistration.vue');
+const ContactCoach = () => import('./pages/requests/ContactCoach.vue');
+const RequestsRecieved = () => import('./pages/requests/RequestsRecieved.vue');
+const UserAuth = () => import('./pages/auth/UserAuth.vue');
 
 const router = createRouter({
   history: createWebHistory(),
