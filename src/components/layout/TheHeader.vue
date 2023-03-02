@@ -49,6 +49,11 @@ export default {
   justify-content: center;
   align-items: center;
 
+  @media screen and (max-width: 533px) {
+    flex-direction: column;
+    gap: 20px;
+  }
+
   &_link {
     text-decoration: none;
     color: #f391e3;
@@ -62,6 +67,10 @@ export default {
     &:hover,
     &.router-link-active {
       border: 1px solid #f391e3;
+    }
+
+    @media screen and (max-width: 600px) {
+      padding: 0.75rem 0.7rem;
     }
   }
 

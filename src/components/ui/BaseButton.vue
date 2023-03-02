@@ -44,6 +44,8 @@ export default {
   display: inline-block;
   transition: all 0.3s ease-out;
 
+  
+
   &:hover,
   &:active {
     background-color: #270041;
